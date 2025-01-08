@@ -3,7 +3,9 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseEvent;
 
 /**
- * Mouse is the class that handles all inputs from the mouse
+ * Mouse is the class that handles all inputs from the mouse. It implements both MouseListener
+ * and MouseMotionListener to capture all mouse-related events including clicks, movement,
+ * and button states.
  *
  * @author Jerry Cui
  */
@@ -12,6 +14,12 @@ public class Mouse implements MouseListener, MouseMotionListener {
     private static int mouseY = 0;
     private static boolean[] mouseButtons = new boolean[3];  // Left, Middle, Right buttons
 
+    /**
+     * Handles mouse button press events. When a mouse button is pressed, this method updates
+     * the button state and creates a MOUSEBUTTONDOWN event with the button index and coordinates.
+     *
+     * @param e The MouseEvent containing information about the button press
+     */
     @Override
     public void mousePressed(MouseEvent e) {
         int button = e.getButton() - 1;  // Convert to 0-based index
@@ -25,6 +33,12 @@ public class Mouse implements MouseListener, MouseMotionListener {
         }
     }
 
+    /**
+     * Handles mouse button release events. When a mouse button is released, this method updates
+     * the button state and creates a MOUSEBUTTONUP event with the button index and coordinates.
+     *
+     * @param e The MouseEvent containing information about the button release
+     */
     @Override
     public void mouseReleased(MouseEvent e) {
         int button = e.getButton() - 1;
@@ -38,6 +52,12 @@ public class Mouse implements MouseListener, MouseMotionListener {
         }
     }
 
+    /**
+     * Handles mouse movement events. Updates the stored mouse coordinates and creates
+     * a MOUSEMOTION event with the new coordinates.
+     *
+     * @param e The MouseEvent containing information about the mouse movement
+     */
     @Override
     public void mouseMoved(MouseEvent e) {
         mouseX = e.getX();
@@ -48,30 +68,64 @@ public class Mouse implements MouseListener, MouseMotionListener {
         Events.post(event);
     }
 
+    /**
+     * Handles mouse drag events.
+     *
+     * @param e The MouseEvent containing information about the mouse drag
+     */
     @Override
     public void mouseDragged(MouseEvent e) {
         mouseMoved(e);  // Handle the same way as mouseMoved
     }
 
-    // Required by interface but not used
+    /**
+     * Required by the MouseListener interface but not used in this implementation.
+     *
+     * @param e The MouseEvent containing information about the mouse click
+     */
     @Override
     public void mouseClicked(MouseEvent e) {}
 
+    /**
+     * Required by the MouseListener interface but not used in this implementation.
+     *
+     * @param e The MouseEvent containing information about the mouse entering the component
+     */
     @Override
     public void mouseEntered(MouseEvent e) {}
 
+    /**
+     * Required by the MouseListener interface but not used in this implementation.
+     *
+     * @param e The MouseEvent containing information about the mouse exiting the component
+     */
     @Override
     public void mouseExited(MouseEvent e) {}
 
+    /**
+     * Checks if a specific mouse button is currently pressed.
+     *
+     * @param button The button index to check (0 for left, 1 for middle, 2 for right)
+     * @return true if the specified button is currently pressed, false otherwise
+     */
     public static boolean isButtonPressed(int button) {
         return button >= 0 && button < mouseButtons.length && mouseButtons[button];
     }
 
-    // Getter methods
+    /**
+     * Gets the current X coordinate of the mouse cursor.
+     *
+     * @return The current X coordinate of the mouse cursor
+     */
     public static int getX() {
         return mouseX;
     }
 
+    /**
+     * Gets the current Y coordinate of the mouse cursor.
+     *
+     * @return The current Y coordinate of the mouse cursor
+     */
     public static int getY() {
         return mouseY;
     }
