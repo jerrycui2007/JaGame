@@ -2,43 +2,47 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Display is the class that creates the display for the user.
+ * Display is the class is responsible for creating and managing
+ * a graphical user interface (GUI) window for an application.
  *
  * @author Sam Ghasemzadeh
  */
 public class Display {
     // the Display contains a JFrame
+    /*
+     * The main JFrame object that serves as the application's main window.
+     */
     private JFrame display = new JFrame();
 
     // creating a panel
-    private JPanel panel = new JPanel();
-
-
-
-    /**
-     * Set mode is for setting the size of the display.
-     * @param screenWidth the width of the display.
-     * @param screenHeight the hight of the display.
+    /*
+     * A JPanel that is added to the JFrame.
+     * It can be used to draw or add other components.
      */
-    public void setMode(int screenWidth, int screenHeight){
-        display.setSize(screenWidth, screenHeight);
-    }
+    private JPanel panel = new JPanel();
 
     /**
      * The constructor initializes a display object.
+     * Constructs a default Display object with no title.
+     * Closes the application when the user clicks the close button.
+     * Displays a new JPanel.
+     * Is set to be visible.
      */
     public Display(){
         //setting the close operation on exit button
         display.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //adding the panel to the frame
         display.add(panel);
-        //making frame visible
+        //making JFrame visible
         display.setVisible(true);
     }
 
     /**
-     *
-     * @param title
+     * The constructor initializes a display object with a specific title.
+     * Closes the application when the user clicks the close button.
+     * Displays a new JPanel.
+     * Is set to be visible.
+     * @param title the title to be displayed in the window's title bar.
      */
     public Display(String title){
         display = new JFrame(title);
@@ -51,9 +55,21 @@ public class Display {
     }
 
     /**
-     * This method updates the display.
+     * Set mode is for setting the size (width and height) of the display.
+     * @param screenWidth the width of the display.
+     * @param screenHeight the hight of the display.
      */
+    public void setMode(int screenWidth, int screenHeight){
+        // set the size of the display (JFrame) to the specified width and height
+        display.setSize(screenWidth, screenHeight);
+    }
+
+    /**
+     * Repaints the inside the window, which can be used to
+     * refresh the display after graphical changes
+     * */
     public void update(){
+        // Repaint the panel to reflect any changes in the UI
         panel.repaint();
     }
 
