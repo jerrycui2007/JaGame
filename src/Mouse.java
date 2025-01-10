@@ -1,15 +1,17 @@
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelListener;
+import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseEvent;
 
 /**
- * Mouse is the class that handles all inputs from the mouse. It implements both MouseListener
- * and MouseMotionListener to capture all mouse-related events including clicks, movement,
- * and button states.
+ * Mouse is the class that handles all inputs from the mouse. It implements MouseListener,
+ * MouseMotionListener, and MouseWheelListener to capture all mouse-related events including 
+ * clicks, movement, and wheel scrolling.
  *
  * @author Jerry Cui
  */
-public class Mouse implements MouseListener, MouseMotionListener {
+public class Mouse implements MouseListener, MouseMotionListener, MouseWheelListener {
     private static int mouseX = 0;
     private static int mouseY = 0;
     private static boolean[] mouseButtons = new boolean[3];  // Left, Middle, Right buttons
@@ -101,6 +103,20 @@ public class Mouse implements MouseListener, MouseMotionListener {
      */
     @Override
     public void mouseExited(MouseEvent e) {}
+
+    /**
+     * Handles mouse wheel events. When the mouse wheel is scrolled, this method creates
+     * a MOUSEWHEEL event with the scroll amount.
+     *
+     * @param e The MouseWheelEvent containing information about the wheel movement
+     */
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent e) {
+        Events.Event event = new Events.Event(Locals.MOUSEWHEEL);
+        // getWheelRotation() returns positive for scroll down, negative for scroll up
+        event.setAttribute("scroll", e.getWheelRotation());
+        Events.post(event);
+    }
 
     /**
      * Checks if a specific mouse button is currently pressed.

@@ -11,4 +11,5 @@ public class Locals {
     public static final int MOUSEMOTION = 3;
     public static final int KEYDOWN = 4;
     public static final int KEYUP = 5;
+    public static final int MOUSEWHEEL = 6;
 }

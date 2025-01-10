@@ -14,12 +14,12 @@ public class Display {
      */
     private JFrame display = new JFrame();
 
-    // creating a panel
+    // creating a DrawPanel
     /*
-     * A JPanel that is added to the JFrame.
+     * A JPanel(DrawPanel) that is added to the JFrame.
      * It can be used to draw or add other components.
      */
-    private JPanel panel = new JPanel();
+    private DrawPanel drawPanel = new DrawPanel();
 
     /**
      * The constructor initializes a display object.
@@ -32,7 +32,8 @@ public class Display {
         //setting the close operation on exit button
         display.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //adding the panel to the frame
-        display.add(panel);
+        display.add(drawPanel);
+        display.pack();
         //making JFrame visible
         display.setVisible(true);
     }
@@ -49,7 +50,7 @@ public class Display {
         //setting the close operation on exit button
         display.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //adding the panel to the frame
-        display.add(panel);
+        display.add(drawPanel);
         //making frame visible
         display.setVisible(true);
     }
@@ -70,7 +71,19 @@ public class Display {
      * */
     public void update(){
         // Repaint the panel to reflect any changes in the UI
-        panel.repaint();
+        drawPanel.repaint();
+    }
+
+    /**
+     * Draws a rectangle on the display.
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @param width the width of the rectangle
+     * @param height the height of the rectangle
+     * @param c the color of the rectangle
+     */
+    public void drawRectangle(int x, int y, int width, int height, Color c){
+        drawPanel.addRectangle(x,y,width,height,c);
     }
 
     //getters
