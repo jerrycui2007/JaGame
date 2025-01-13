@@ -5,6 +5,7 @@ import java.util.TimerTask;
 
 /**
  * Time is the class for monitoring time
+ * @author Vincent Han
  */
 public class Time {
     // delay to control FPS

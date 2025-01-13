@@ -26,7 +26,7 @@ public class DrawPanel extends JPanel {
             this.halo = halo;
         }
 
-        public ShapeInfo(String text, int x, int y, Color color, boolean halo) {
+        public ShapeInfo(String text, int x, int y, Color color) {
             this.text = text;
             this.color = color;
             this.x = x;
@@ -95,7 +95,7 @@ public class DrawPanel extends JPanel {
         super.paintComponent(g);
         //https://docs.oracle.com/javase/tutorial/2d/advanced/quality.html
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,  RenderingHints.VALUE_ANTIALIAS_ON);
+        //g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,  RenderingHints.VALUE_ANTIALIAS_ON);
 
         for (ShapeInfo si : items) {
             g2d.setColor(si.getColor());
@@ -117,9 +117,21 @@ public class DrawPanel extends JPanel {
      * @param width the width of the rectangle
      * @param height the height of the rectangle
      * @param c the color of the rectangle
+     * @param halo if true then the rectangle will be drawn halo without being filled in.
      */
     public void addRectangle(int x, int y, int width, int height, Color c, boolean halo) {
         items.add(new ShapeInfo(new Rectangle(x, y, width, height), c, halo));
+        repaint();
+    }
+
+    /**
+     * Adds a rectangle to the list of items to be drawn.
+     * @param dimensions this array will contain the following in order: the x-coordinate, the y-coordinate, the width of the rectangle, the color of the rectangle
+     * @param c the color of the rectangle
+     * @param halo if true then the rectangle will be drawn halo without being filled in.
+     */
+    public void addRectangle(int[] dimensions, Color c, boolean halo){
+        items.add(new ShapeInfo(new Rectangle(dimensions[0], dimensions[1], dimensions[2], dimensions[3]), c, halo));
         repaint();
     }
 
@@ -138,6 +150,18 @@ public class DrawPanel extends JPanel {
                 radius * 2,
                 radius * 2);
         items.add(new ShapeInfo(circle, c, halo));
+        repaint();
+    }
+
+    /**
+     * Adds text to the list of items to be drawn.
+     *
+     * @param text the text to add
+     * @param x    the x-coordinate for the text
+     * @param y    the y-coordinate for the text
+     */
+    public void addText(String text, int x, int y, Color c) {
+        items.add(new ShapeInfo(text, x, y, c));
         repaint();
     }
 

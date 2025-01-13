@@ -86,6 +86,24 @@ public class Display {
         drawPanel.addRectangle(x,y,width,height,c, halo);
     }
 
+    public void drawRectangle(int[] rect, Color c, boolean halo){
+        drawPanel.addRectangle(rect[0], rect[1], rect[2], rect[3], c, halo);
+    }
+
+    /**
+     * Draws a circle on the display.
+     */
+    public void drawCircle(int centerX, int centerY, int radius, Color c, boolean halo) {
+        drawPanel.addCircle(centerX, centerY, radius, c , halo);
+    }
+
+    /**
+     * Draws text on the display.
+     */
+    public void drawText(String text, int x, int y, Color c) {
+        drawPanel.addText(text, x, y, c);
+    }
+
     //getters
     public JFrame getDisplay() {
         return display;
