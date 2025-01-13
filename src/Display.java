@@ -82,8 +82,8 @@ public class Display {
      * @param height the height of the rectangle
      * @param c the color of the rectangle
      */
-    public void drawRectangle(int x, int y, int width, int height, Color c){
-        drawPanel.addRectangle(x,y,width,height,c);
+    public void drawRectangle(int x, int y, int width, int height, Color c, boolean halo){
+        drawPanel.addRectangle(x,y,width,height,c, halo);
     }
 
     //getters

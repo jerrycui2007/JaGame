@@ -18,17 +18,20 @@ public class DrawPanel extends JPanel {
         private int y;
         private String text;
         private Color color;
+        private boolean halo;
 
-        public ShapeInfo(Shape shape, Color color) {
+        public ShapeInfo(Shape shape, Color color, boolean halo) {
             this.shape = shape;
             this.color = color;
+            this.halo = halo;
         }
 
-        public ShapeInfo(String text, int x, int y, Color color) {
+        public ShapeInfo(String text, int x, int y, Color color, boolean halo) {
             this.text = text;
             this.color = color;
             this.x = x;
             this.y = y;
+            this.halo = halo;
         }
 
         //setters
@@ -73,6 +76,10 @@ public class DrawPanel extends JPanel {
             return color;
         }
 
+        public boolean getHalo() {
+            return halo;
+        }
+
     }
 
 
@@ -94,7 +101,9 @@ public class DrawPanel extends JPanel {
             g2d.setColor(si.getColor());
             if (si.text != null) {
                 g2d.drawString(si.getText(), si.x, si.y);
-            } else {
+            } else if(si.getHalo()){
+                g2d.draw(si.getShape());
+            } else{
                 g2d.fill(si.getShape());
             }
         }
@@ -109,8 +118,8 @@ public class DrawPanel extends JPanel {
      * @param height the height of the rectangle
      * @param c the color of the rectangle
      */
-    public void addRectangle(int x, int y, int width, int height, Color c) {
-        items.add(new ShapeInfo(new Rectangle(x, y, width, height), c));
+    public void addRectangle(int x, int y, int width, int height, Color c, boolean halo) {
+        items.add(new ShapeInfo(new Rectangle(x, y, width, height), c, halo));
         repaint();
     }
 
@@ -122,13 +131,13 @@ public class DrawPanel extends JPanel {
      * @param radius  the radius of the circle
      * @param c the color of the circle
      */
-    public void addCircle(int centerX, int centerY, int radius, Color c) {
+    public void addCircle(int centerX, int centerY, int radius, Color c, boolean halo) {
         // https://docs.oracle.com/javase/8/docs/api/java/awt/geom/Ellipse2D.html
         Shape circle = new Ellipse2D.Double(centerX - radius,
                 centerY - radius,
                 radius * 2,
                 radius * 2);
-        items.add(new ShapeInfo(circle, c));
+        items.add(new ShapeInfo(circle, c, halo));
         repaint();
     }
 

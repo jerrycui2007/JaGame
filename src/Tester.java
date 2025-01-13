@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -54,6 +55,8 @@ public class Tester {
                         Mouse.getX() + ", " + Mouse.getY() + ")");
                 }
             }
+
+            window.drawRectangle(50, 50, 100, 200, Color.RED, true);
 
             window.update();
             clock.tick(FPS);

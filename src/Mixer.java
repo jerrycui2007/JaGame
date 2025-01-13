@@ -146,5 +146,45 @@ public class Mixer {
                 isPlaying = true;
             }
         }
+
+        /**
+         * Gets the length of the sound in seconds
+         * @return length of the sound in seconds
+         */
+        public long getSecondLength(){
+            return clip.getMicrosecondLength() / 1000000;
+        }
+
+        /**
+         * Gets the length of the sound in sample frames
+         * @return length of sound in sample frames
+         */
+        public int getFrameLength(){
+            return clip.getFrameLength();
+        }
+
+        /**
+         * Sets the position of the sound in sample frames
+         * @param frames the frame to position the sound, must be between 0 and the length
+         */
+        public void setFramePosition(int frames){
+            int length = getFrameLength();
+            if (frames < 0 || frames > length){
+                throw new IllegalArgumentException("Must be within the frame length");
+            }
+            clip.setFramePosition(frames);
+        }
+
+        /**
+         * Sets the position of the sound in microseconds
+         * @param microseconds the microsecond to position the sound, must be between 0 and the lengthh
+         */
+        public void setMicrosecondPosition(long microseconds){
+            long length = clip.getMicrosecondLength();
+            if (microseconds < 0 || microseconds > length){
+                throw new IllegalArgumentException("Must be within the length");
+            }
+            clip.setMicrosecondPosition(microseconds);
+        }
     }
 }
