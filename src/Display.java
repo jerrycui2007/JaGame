@@ -86,6 +86,12 @@ public class Display {
         drawPanel.addRectangle(x,y,width,height,c, halo);
     }
 
+    /**
+     * Adds a rectangle to the list of items to be drawn.
+     * @param rect this array will contain the following in order: the x-coordinate, the y-coordinate, the width of the rectangle, the color of the rectangle
+     * @param c the color of the rectangle
+     * @param halo if true then the rectangle will be drawn halo without being filled in.
+     */
     public void drawRectangle(int[] rect, Color c, boolean halo){
         drawPanel.addRectangle(rect[0], rect[1], rect[2], rect[3], c, halo);
     }
@@ -99,10 +105,42 @@ public class Display {
 
     /**
      * Draws text on the display.
+     * @param text the text to add
+     * @param x    the x-coordinate for the text
+     * @param y    the y-coordinate for the text
+     * @param c the color of the text
      */
     public void drawText(String text, int x, int y, Color c) {
         drawPanel.addText(text, x, y, c);
     }
+
+    /**
+     * Clears all shapes and text from the panel.
+     */
+    public void clear() {
+        drawPanel.clear();
+    }
+
+
+    /**
+     * Fill the window with a specific color
+     *
+     * @param color color to fill with
+     */
+    public void fill(Color color) {
+        this.drawRectangle(0, 0, this.display.getWidth(), this.display.getHeight(), color, false);
+    }
+
+    /**
+     * Adds a Sprite to the panel to be drawn.
+     *
+     * @param sprite the sprite to add
+     */
+    public void addSprite(Sprite sprite) {
+        drawPanel.addSprite(sprite);
+    }
+
+
 
     //getters
     public JFrame getDisplay() {

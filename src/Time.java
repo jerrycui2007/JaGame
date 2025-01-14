@@ -65,6 +65,7 @@ public class Time {
     }
 
     /**
+     * Update the clock
      * Computes how many milliseconds have passed since the previous call
      */
     public void tick(){
@@ -77,6 +78,7 @@ public class Time {
     }
 
     /**
+     * Update the clock
      * Computes how many milliseconds have passed since the previous call, limited by FPS
      * @param targetFPS the FPS to limit runtime speed
      */

@@ -1,3 +1,4 @@
+import java.awt.geom.AffineTransform;
 import java.awt.image.*;
 import javax.imageio.ImageIO;
 import java.awt.Graphics2D;
@@ -30,11 +31,11 @@ public class Transform {
     }
 
     /**
-     *
-     * @param image
-     * @param width
-     * @param height
-     * @return
+     * This method scales the image into a new image with the given dimensions.
+     * @param image The given Image
+     * @param width The new width
+     * @param height The new height
+     * @return the scaled image.
      * @author Sam Ghasemzadeh
      */
     public static BufferedImage scale(BufferedImage image, int width, int height){
@@ -44,6 +45,7 @@ public class Transform {
         // g2d is used to draw the image
         // this creates a Graphics2D, which can be used to draw into this BufferedImage https://docs.oracle.com/javase/8/docs/api/java/awt/image/BufferedImage.html
         Graphics2D gd = scaledImage.createGraphics();
+        gd.drawImage(image, 0, 0, null);
 
         //returning the scaled image
         return scaledImage;
@@ -58,10 +60,10 @@ public class Transform {
      * @return the resized image
      * @author Vincent Han
      */
-    public static BufferedImage scaleByFactor(BufferedImage image, int widthFactor, int heightFactor){
+    public static BufferedImage scaleByFactor(BufferedImage image, double widthFactor, double heightFactor){
         // Set new dimensions
-        int width = image.getWidth() * widthFactor;
-        int height = image.getHeight() * heightFactor;
+        int width = (int)(image.getWidth() * widthFactor);
+        int height = (int)(image.getHeight() * heightFactor);
 
         // create a new BufferedImage with the desired width and height
         BufferedImage scaledImage = new BufferedImage(width, height, image.getType());
@@ -74,26 +76,71 @@ public class Transform {
         return scaledImage;
     }
 
-//Sam
-//    public static BufferedImage flipHorizontal(BufferedImage image){
-//
-//    }
-//Sam
-//    public static BufferedImage flipVertical(BufferedImage image){
-//
-//    }
-//Vincent
-//    public static BufferedImage crop(BufferedImage image, int x, int y, int width, int height){
-//
-//    }
 
     /**
-     *
-     * @param image
-     * @return
+     * Flip an image horizontally
+     * @param image the image to flip
+     * @return new image
+     * @author Vincent Han
+     */
+    public static BufferedImage flipHorizontal(BufferedImage image){
+        int width = image.getWidth();
+        int height = image.getHeight();
+        BufferedImage flippedImage = new BufferedImage(width, height, image.getType());
+        Graphics2D gd = flippedImage.createGraphics();
+
+        // Reverse the image along the x-axis
+        AffineTransform transform = AffineTransform.getScaleInstance(-1, 1);
+        // Translate the image back to be visible (width distance to the right, width is negative because it got reversed)
+        transform.translate(-width, 0);
+
+        gd.drawImage(image, transform, null);
+        gd.dispose();
+        return flippedImage;
+    }
+
+    /**
+     * Flip an image vertically
+     * @param image the image to flip
+     * @return new image
+     * @author Vincent Han
+     */
+    public static BufferedImage flipVertical(BufferedImage image){
+        int width = image.getWidth();
+        int height = image.getHeight();
+        BufferedImage flippedImage = new BufferedImage(width, height, image.getType());
+        Graphics2D gd = flippedImage.createGraphics();
+
+        // Reverse the image along the y-axis
+        AffineTransform transform = AffineTransform.getScaleInstance(1, -1);
+        // Translate the image back to be visible (height distance down, height is negative because it got reversed)
+        transform.translate(0, -height);
+
+        gd.drawImage(image, transform, null);
+        gd.dispose();
+        return flippedImage;
+    }
+
+    /**
+     * Crops a rectangular region from an image
+     * @param image the image to crop
+     * @param x the x starting point of the new image
+     * @param y the y starting point of the new image
+     * @param width the width of the new image
+     * @param height the height of the new image
+     * @return the cropped image
+     */
+    public static BufferedImage crop(BufferedImage image, int x, int y, int width, int height){
+        return image.getSubimage(x, y, width, height);
+    }
+
+    /**
+     * This method converts an image into graysacle.
+     * @param image the input image.
+     * @return the graysacle image.
      * @author Sam Ghasemzadeh
      */
-    public static BufferedImage greyscale(BufferedImage image){
+    public static BufferedImage grayscale(BufferedImage image){
         // create a new BufferedImage that is grayscale, by setting thetyrp to image.TYPE_BYTE_GRAY
         BufferedImage grayScaleImage = new BufferedImage(image.getWidth(), image.getHeight(), image.TYPE_BYTE_GRAY);
         // g2d is used to draw the image

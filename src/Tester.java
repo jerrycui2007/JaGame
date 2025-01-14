@@ -21,7 +21,6 @@ public class Tester {
 
         Mixer.Sound sound = new Mixer.Sound("menu_music.mp3");
 
-
         Time clock = new Time();
 
         int x = 50;
@@ -75,7 +74,7 @@ public class Tester {
                 }
             }
 
-            window.drawRectangle(0, 0, 800, 400, Color.WHITE, false);
+            window.clear();
             window.drawRectangle(x, y, 100, 200, Color.RED, true);
 
             window.update();

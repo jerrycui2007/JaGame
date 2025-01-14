@@ -4,6 +4,7 @@ import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 
 /**
+ * Draw panel is where the drawing into the display is created.
  *
  *  @author Sam Ghasemzadeh
  */
@@ -31,7 +32,6 @@ public class DrawPanel extends JPanel {
             this.color = color;
             this.x = x;
             this.y = y;
-            this.halo = halo;
         }
 
         //setters
@@ -81,7 +81,8 @@ public class DrawPanel extends JPanel {
         }
 
     }
-
+    // keeping track of shapes, plus Sprites
+    private ArrayList<Sprite> sprites = new ArrayList<Sprite>();
 
     private ArrayList<ShapeInfo> items = new ArrayList<ShapeInfo>();
 
@@ -94,18 +95,28 @@ public class DrawPanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         //https://docs.oracle.com/javase/tutorial/2d/advanced/quality.html
+        // using Graphics2D to draw
         Graphics2D g2d = (Graphics2D) g;
         //g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,  RenderingHints.VALUE_ANTIALIAS_ON);
 
+        //looping through all the items and drawing them
         for (ShapeInfo si : items) {
             g2d.setColor(si.getColor());
-            if (si.text != null) {
+            if (si.getText() != null) {
+                //if a sting draw string
                 g2d.drawString(si.getText(), si.x, si.y);
             } else if(si.getHalo()){
+                // if the shape is halo draw the boders only
                 g2d.draw(si.getShape());
             } else{
+                // otherwise fill in the shape
                 g2d.fill(si.getShape());
             }
+        }
+
+        //looping through all the sprites and drawing them
+        for (Sprite s : sprites) {
+            s.draw(g);
         }
 
     }
@@ -159,19 +170,34 @@ public class DrawPanel extends JPanel {
      * @param text the text to add
      * @param x    the x-coordinate for the text
      * @param y    the y-coordinate for the text
+     * @param c the color of the text
      */
     public void addText(String text, int x, int y, Color c) {
         items.add(new ShapeInfo(text, x, y, c));
         repaint();
     }
 
+    /* -----------------------
+     * Methods for sprites
+     * ----------------------- */
+
+    /**
+     * Adding a sprite(image).
+     * @param sprite the sprite added.2
+     */
+    public void addSprite(Sprite sprite) {
+        sprites.add(sprite);
+        repaint();
+    }
+
 
 
     /**
-     * Clears all shapes and text from the panel.
+     * Clears all shapes and text and sprites from the panel.
      */
     public void clear(){
         items.clear();
+        sprites.clear();
         repaint();
     }
 }

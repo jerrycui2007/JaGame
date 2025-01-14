@@ -18,18 +18,18 @@ public class Mixer {
     /**
      * Sets the global volume for all sounds
      * Multiplies all sound's volume by a set amount
-     * @param volume the amount to multiply sound's volume by
+     * @param volumeScalar the amount to multiply sound's volume by
      */
-    public void setMasterVolume(float volume) {
-        if (volume < 0){
+    public void setMasterVolume(float volumeScalar) {
+        if (volumeScalar < 0){
             masterVolume = 0;
-        } else if (volume > 1){
-            masterVolume = 1;
+        } else if (volumeScalar > 100){
+            masterVolume = 100;
         } else {
-            masterVolume = volume;
+            masterVolume = volumeScalar;
         }
         for (Sound sound : activeSounds){
-            sound.setVolume(sound.getVolume() * masterVolume);
+            sound.setVolume(sound.getVolume() * volumeScalar);
         }
     }
 
@@ -470,7 +470,7 @@ public class Mixer {
     /**
      * MusicQueue is the inner class for representing a playlist of Music objects to be played
      */
-    public class MusicQueue {
+    public static class MusicQueue {
         private Queue<Music> playlist;
         private Music currentSong;
 
@@ -510,7 +510,16 @@ public class Mixer {
          */
         public void stopCurrentTrack(){
             if (currentSong != null && currentSong.isActive()){
-                currentSong.stop();
+                currentSong.pause();
+            }
+        }
+
+        /**
+         * Resumes the current track in the playlist
+         */
+        public void resumeCurrentTrack(){
+            if (currentSong != null && !currentSong.isActive()){
+                currentSong.unpause();
             }
         }
 
