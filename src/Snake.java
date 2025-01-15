@@ -211,7 +211,35 @@ public class Snake {
                     squareTicker = squareTickerMax;
                 }
             } else {  // Strategy game mode
+                // TODO: Display turn text
+                if (turn.equals("Player 1")) {
+                    for (Events.Event event : events) {
+                        if (event.getType() == Locals.KEYDOWN) {
+                            char keyChar = (char) event.getAttribute("char");
 
+                            if (keyChar == 'w' && squares.get(0).queue.get(0) != DOWN) {  // Can't travel in the opposite direction
+                                direction = UP;
+                                player1Moved = true;
+                            } else if (keyChar == 'd' && squares.get(0).queue.get(0) != LEFT) {  // Can't travel in the opposite direction
+                                direction = RIGHT;
+                                player1Moved = true;
+                            } else if (keyChar == 's' && squares.get(0).queue.get(0) != UP) {  // Can't travel in the opposite direction
+                                direction = DOWN;
+                                player1Moved = true;
+                            } else if (keyChar == 'a' && squares.get(0).queue.get(0) != RIGHT) {  // Can't travel in the opposite direction
+                                direction = LEFT;
+                                player1Moved = true;
+                            }
+
+                            if (player1Moved) {
+                                squares.get(0).queue.clear();
+                                squares.get(0).queue.add(direction);
+                                squares.get(0).queue.add(direction);  // queue needs to have two items to prevent an error
+                            }
+                            
+                        }
+                    }
+                }
             }
         }
     }

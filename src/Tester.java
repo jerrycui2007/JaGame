@@ -1,4 +1,7 @@
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -25,9 +28,26 @@ public class Tester {
 
         int x = 50;
         int y = 50;
+        
+        // Create sprite once, outside the game loop
+        Sprite s = new Sprite(5,5,"images/classic_menu.png");
+        /*
+        try {
+            File imageFile = new File("images/classic_menu.png");
+            System.out.println("Attempting to load image from: " + imageFile.getAbsolutePath());
+            if (!imageFile.exists()) {
+                System.out.println("Image file does not exist!");
+            }
+            s = new Sprite(5, 5, "images/classic_menu.png");
+            window.addSprite(s);
+        } catch (Exception e) {
+            System.out.println("Error loading sprite: " + e.getMessage());
+            e.printStackTrace();
+        }
+         */
+
 
         // Main game loop
-
         final int FPS = 60;
         while (true) {
             // Process all events
@@ -76,6 +96,7 @@ public class Tester {
 
             window.clear();
             window.drawRectangle(x, y, 100, 200, Color.RED, true);
+            window.addSprite(s);
 
             window.update();
             clock.tick(FPS);
