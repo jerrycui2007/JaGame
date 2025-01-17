@@ -202,11 +202,13 @@ public class Pong {
         // Check for collisions with paddles
         if (ballX <= 50 + PADDLE_WIDTH && ballY + BALL_SIZE >= leftPaddleY && ballY <= leftPaddleY + PADDLE_HEIGHT) {
             ballXVelocity = -ballXVelocity;
+            ballXVelocity++;  // increase speed for each hit
             ballX = 50 + PADDLE_WIDTH;
         }
         
         if (ballX + BALL_SIZE >= SCREEN_WIDTH - 50 - PADDLE_WIDTH && ballY + BALL_SIZE >= rightPaddleY && ballY <= rightPaddleY + PADDLE_HEIGHT) {
             ballXVelocity = -ballXVelocity;
+            ballXVelocity--;  // increase speed for each hit
             ballX = SCREEN_WIDTH - 50 - PADDLE_WIDTH - BALL_SIZE;
         }
         
