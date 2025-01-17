@@ -1,7 +1,4 @@
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -11,6 +8,8 @@ public class Tester {
     public static void main(String[] args) {
         Display window = new Display("Title");
         window.setMode(800, 400);
+
+        Text t =new Text("Hola", 20,30, new Font("SERIF",1,24), new Color(255,89,70));
 
         // Create and register input listeners
 
@@ -22,15 +21,31 @@ public class Tester {
         window.getDisplay().addMouseMotionListener(mouseListener);
         window.getDisplay().addMouseWheelListener(mouseListener);
 
-        Mixer.Sound sound = new Mixer.Sound("menu_music.mp3");
+        Mixer mixer = new Mixer();
+        Mixer.Music music = new Mixer.Music("./assets/menu_music.mp3");
 
+        mixer.playBackgroundMusic(music);
         Time clock = new Time();
+//        TimerTask task = new TimerTask() {
+//            @Override
+//            public void run(){
+//                window.drawRectangle(50, 50, 50, 50, Color.BLACK, true);
+//            }
+//        };
+//        TimerTask circleTask = new TimerTask() {
+//            @Override
+//            public void run(){
+//                window.drawCircle( 250, 250, 50, Color.BLUE, true);
+//            }
+//        };
+//        clock.setTimer(1, 2500, task);
+//        clock.setTimer(2, 7000, circleTask);
 
         int x = 50;
         int y = 50;
         
         // Create sprite once, outside the game loop
-        Sprite s = new Sprite(5,5,"images/classic_menu.png");
+        Sprite s = new Sprite(5,5, "assets/classic_menu.png");
         /*
         try {
             File imageFile = new File("images/classic_menu.png");
@@ -96,7 +111,8 @@ public class Tester {
 
             window.clear();
             window.drawRectangle(x, y, 100, 200, Color.RED, true);
-            window.addSprite(s);
+            //window.addSprite(s);
+            window.drawText(t);
 
             window.update();
             clock.tick(FPS);

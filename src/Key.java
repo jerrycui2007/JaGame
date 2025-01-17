@@ -14,29 +14,47 @@ import java.util.HashMap;
  */
 public class Key implements KeyListener {
     private static HashMap<Integer, Boolean> pressedKeys = new HashMap<>();
+    private static HashMap<Character, Boolean> pressedChars = new HashMap<>();
 
     /**
-     * Handles key press events. When a key is pressed, this method:
-     * 1. Updates the internal key state to mark the key as pressed
-     * 2. Creates and posts a KEYDOWN event with the key code and character
+     * Updates the state of held keys and generates continuous events for them.
+     * This should be called once per frame from the game loop.
+     */
+    public static void update() {
+        for (Integer keyCode : pressedKeys.keySet()) {
+            if (pressedKeys.get(keyCode)) {
+                Events.Event event = new Events.Event(Locals.KEYDOWN);
+                event.setAttribute("key", keyCode);
+                event.setAttribute("char", (char) keyCode.intValue());
+                Events.post(event);
+            }
+        }
+    }
+
+    /**
+     * Handles key press events. When a key is pressed, it gets marked as pressed, and adds a KEYDOWN Event
      *
-     * @param e The KeyEvent containing information about the key press,
-     *          including the key code and character
+     * @param e The KeyEvent containing information about the key press, including the key code and character
      */
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
-        pressedKeys.put(keyCode, true);
-        Events.Event event = new Events.Event(Locals.KEYDOWN);
-        event.setAttribute("key", keyCode);
-        event.setAttribute("char", e.getKeyChar());
-        Events.post(event);
+        char keyChar = e.getKeyChar();
+        
+        // Ignore system auto-repeat
+        if (!pressedKeys.getOrDefault(keyCode, false)) {
+            Events.Event event = new Events.Event(Locals.KEYDOWN);
+            event.setAttribute("key", keyCode);
+            event.setAttribute("char", keyChar);
+            Events.post(event);
+            
+            pressedKeys.put(keyCode, true);
+            pressedChars.put(keyChar, true);
+        }
     }
 
     /**
-     * Handles key release events. When a key is released, this method:
-     * 1. Updates the internal key state to mark the key as released
-     * 2. Creates and posts a KEYUP event with the key code and character
+     * Updates keys that are released so they are no longer held down
      *
      * @param e The KeyEvent containing information about the key release,
      *          including the key code and character
@@ -44,10 +62,16 @@ public class Key implements KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
         int keyCode = e.getKeyCode();
+        char keyChar = e.getKeyChar();
+
         pressedKeys.put(keyCode, false);
+        pressedChars.put(keyChar, false);
+
         Events.Event event = new Events.Event(Locals.KEYUP);
+
         event.setAttribute("key", keyCode);
-        event.setAttribute("char", e.getKeyChar());
+        event.setAttribute("char", keyChar);
+
         Events.post(event);
     }
 
@@ -60,28 +84,5 @@ public class Key implements KeyListener {
     @Override
     public void keyTyped(KeyEvent e) {
         // Not used, we handle keyPressed and keyReleased instead
-    }
-
-    /**
-     * Checks if a specific key is currently pressed.
-     * 
-     * @param keyCode The key code to check (use KeyEvent.VK_* constants)
-     *                For example: KeyEvent.VK_SPACE for space bar,
-     *                KeyEvent.VK_A for 'A' key, etc.
-     * @return true if the specified key is currently pressed, false otherwise
-     */
-    public static boolean isKeyPressed(int keyCode) {
-        return pressedKeys.getOrDefault(keyCode, false);
-    }
-
-    /**
-     * Clears the state of all pressed keys. This is useful when:
-     * - The game window loses focus
-     * - Switching between game states
-     * - Resetting the input state
-     * This ensures no keys are falsely registered as being held down.
-     */
-    public static void clearKeys() {
-        pressedKeys.clear();
     }
 }

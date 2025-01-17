@@ -83,7 +83,7 @@ public class Time {
      * @param targetFPS the FPS to limit runtime speed
      */
     public void tick(int targetFPS){
-        if (targetFPS <= 0 || targetFPS > 60){
+        if (targetFPS <= 0 || targetFPS > 180){
             throw new IllegalArgumentException("FPS must be a reasonable positive number ");
         }
         // Calculate delay per frame in milliseconds

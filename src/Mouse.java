@@ -113,6 +113,7 @@ public class Mouse implements MouseListener, MouseMotionListener, MouseWheelList
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
         Events.Event event = new Events.Event(Locals.MOUSEWHEEL);
+
         // getWheelRotation() returns positive for scroll down, negative for scroll up
         event.setAttribute("scroll", e.getWheelRotation());
         Events.post(event);
