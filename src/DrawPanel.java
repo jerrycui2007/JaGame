@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Draw panel is where the drawing into the display is created.
@@ -81,10 +83,10 @@ public class DrawPanel extends JPanel {
         }
 
     }
-    // keeping track of shapes, plus Sprites
-    private ArrayList<Sprite> sprites = new ArrayList<Sprite>();
-
-    private ArrayList<ShapeInfo> items = new ArrayList<ShapeInfo>();
+    // keeping track of shapes, plus Sprites and texts
+    private List<Sprite> sprites = Collections.synchronizedList(new ArrayList<>());
+    private List<ShapeInfo> items = Collections.synchronizedList(new ArrayList<>());
+    private List<Text> texts = Collections.synchronizedList(new ArrayList<>());
 
     /**
      * Overrides the panel's paintComponent to draw shapes and text.
@@ -99,13 +101,25 @@ public class DrawPanel extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
         //g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,  RenderingHints.VALUE_ANTIALIAS_ON);
 
-        //looping through all the items and drawing them
-        for (ShapeInfo si : items) {
+        // Create temporary copies of the lists to avoid concurrent modification
+        List<ShapeInfo> itemsCopy;
+        List<Text> textsCopy;
+        List<Sprite> spritesCopy;
+
+        synchronized (items) {
+            itemsCopy = new ArrayList<>(items);
+        }
+        synchronized (texts) {
+            textsCopy = new ArrayList<>(texts);
+        }
+        synchronized (sprites) {
+            spritesCopy = new ArrayList<>(sprites);
+        }
+
+        // Draw from the copies
+        for (ShapeInfo si : itemsCopy) {
             g2d.setColor(si.getColor());
-            if (si.getText() != null) {
-                //if a sting draw string
-                g2d.drawString(si.getText(), si.x, si.y);
-            } else if(si.getHalo()){
+            if(si.getHalo()){
                 // if the shape is halo draw the boders only
                 g2d.draw(si.getShape());
             } else{
@@ -114,8 +128,14 @@ public class DrawPanel extends JPanel {
             }
         }
 
+        //looping through texts
+        for(Text text : textsCopy){
+            //draw string
+            text.draw(g);
+        }
+
         //looping through all the sprites and drawing them
-        for (Sprite s : sprites) {
+        for (Sprite s : spritesCopy) {
             s.draw(g);
         }
 
@@ -132,7 +152,7 @@ public class DrawPanel extends JPanel {
      */
     public void addRectangle(int x, int y, int width, int height, Color c, boolean halo) {
         items.add(new ShapeInfo(new Rectangle(x, y, width, height), c, halo));
-        repaint();
+        //repaint();
     }
 
     /**
@@ -143,7 +163,7 @@ public class DrawPanel extends JPanel {
      */
     public void addRectangle(int[] dimensions, Color c, boolean halo){
         items.add(new ShapeInfo(new Rectangle(dimensions[0], dimensions[1], dimensions[2], dimensions[3]), c, halo));
-        repaint();
+        //repaint();
     }
 
     /**
@@ -161,7 +181,7 @@ public class DrawPanel extends JPanel {
                 radius * 2,
                 radius * 2);
         items.add(new ShapeInfo(circle, c, halo));
-        repaint();
+        //repaint();
     }
 
     /**
@@ -171,10 +191,20 @@ public class DrawPanel extends JPanel {
      * @param x    the x-coordinate for the text
      * @param y    the y-coordinate for the text
      * @param c the color of the text
+     * @param font the font of the text.
      */
-    public void addText(String text, int x, int y, Color c) {
-        items.add(new ShapeInfo(text, x, y, c));
-        repaint();
+    public void addText(String text, int x, int y, Font font, Color c) {
+        texts.add(new Text(text, x,y,font, c));
+        //repaint();
+    }
+
+    /**
+     * Adds text to the list of items to be drawn.
+     * @param t is the text object that can be drawn.
+     */
+    public void addText(Text t){
+        texts.add(t);
+        //repaint();
     }
 
     /* -----------------------
@@ -187,7 +217,7 @@ public class DrawPanel extends JPanel {
      */
     public void addSprite(Sprite sprite) {
         sprites.add(sprite);
-        repaint();
+        //repaint();
     }
 
 
@@ -198,6 +228,6 @@ public class DrawPanel extends JPanel {
     public void clear(){
         items.clear();
         sprites.clear();
-        repaint();
+        //repaint();
     }
 }

@@ -1,3 +1,4 @@
+import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
@@ -77,6 +78,20 @@ public class Mixer {
             sound.stop();
         }
         activeSounds.clear();
+    }
+
+    /**
+     * Checks if there's anything in the active sound list playing
+     * @return true if one sound is playing, false if no sounds are playing
+     */
+    public boolean isActive() {
+        boolean active = false;
+        for (Sound sound : activeSounds) {
+            if (sound.isActive()){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -267,17 +282,33 @@ public class Mixer {
         private AudioInputStream audioStream;
         private boolean isPlaying;
 
-        public Music (String filepath){
+        public Music (String filepath) {
             // Try to open the sound file
-            try{
-                audioStream = AudioSystem.getAudioInputStream(new File(filepath).getAbsoluteFile());
+//            try{
+//                audioStream = AudioSystem.getAudioInputStream(new File(filepath).getAbsoluteFile());
+//                clip = AudioSystem.getClip();
+//                clip.open(audioStream);
+//            } catch (Exception e) {
+//                System.out.println("Failed to open");
+//            }
+            try {
+                File file = new File(filepath);
+                audioStream = AudioSystem.getAudioInputStream(file.getAbsoluteFile());
                 clip = AudioSystem.getClip();
                 clip.open(audioStream);
+                System.out.println("Full path: " + file.getAbsolutePath());
+                System.out.println("File exists: " + file.exists());
+                System.out.println("File can read: " + file.canRead());
+                if (this.clip == null) {
+                    throw new IOException("Sound read returned null");
+                }
             } catch (Exception e) {
-                System.out.println("Failed to open");
+                System.out.println("Failed to open: " + filepath);
+                System.out.println("Error details: " + e.getMessage());
+                e.printStackTrace();
+                volume = 1.0f;
+                isPlaying = false;
             }
-            volume = 1.0f;
-            isPlaying = false;
         }
         public Music (String filepath, float volume){
             // Try to open the sound file
@@ -359,8 +390,10 @@ public class Mixer {
          * Music will loop indefinitely until interrupted
          */
         public void loop(){
-            clip.loop(Clip.LOOP_CONTINUOUSLY);
-            isPlaying = true;
+            if (clip != null){
+                clip.loop(Clip.LOOP_CONTINUOUSLY);
+                isPlaying = true;
+            }
         }
 
         /**
@@ -368,8 +401,10 @@ public class Mixer {
          * @param loops the number of times to loop the music
          */
         public void loop(int loops){
-            clip.loop(loops);
-            isPlaying = true;
+            if (clip != null){
+                clip.loop(loops);
+                isPlaying = true;
+            }
         }
 
         /**

@@ -109,9 +109,18 @@ public class Display {
      * @param x    the x-coordinate for the text
      * @param y    the y-coordinate for the text
      * @param c the color of the text
+     * @param font the font of the text.
      */
-    public void drawText(String text, int x, int y, Color c) {
-        drawPanel.addText(text, x, y, c);
+    public void drawText(String text, int x, int y, Font font, Color c) {
+        drawPanel.addText(text, x, y, font, c);
+    }
+
+    /**
+     * Adds text to the list of items to be drawn.
+     * @param t is the text object that can be drawn.
+     */
+    public void drawText(Text t){
+        drawPanel.addText(t);
     }
 
     /**
@@ -140,14 +149,70 @@ public class Display {
         drawPanel.addSprite(sprite);
     }
 
+    /**
+     * Checks whether two rectangles, represented by int arrays containing Each array is expected to have the following structure:  x-coordinate, y-coordinate (top-left), width and height.
+     * @param rectA an int array of size 4 for the first rectangle
+     * @param rectB an int array of size 4 for the second rectangle
+     * @return true if they are colliding, false otherwise.
+     * @throws IllegalArgumentException if the input arrays are not of size 4
+     */
+    public static boolean doRectanglesCollide(int[] rectA, int[] rectB){
+        if (rectA.length != 4 || rectB.length != 4) {
+            throw new IllegalArgumentException("Each rectangle array must have exactly 4 elements.");
+        }
+
+        //the dimensions of rect1
+        int xA = rectA[0];
+        int yA = rectA[1];
+        int hA = rectA[2];
+        int wA = rectA[3];
+
+        //the dimensions of rect2
+        int xB = rectB[0];
+        int yB = rectB[1];
+        int hB = rectB[2];
+        int wB = rectB[3];
+
+        //boundaries of rect1
+        int rightA = xA + wA;
+        int bottomA = yA + hA;
+        //boundaries of rect1
+        int rightB = xB + wB;
+        int bottomB = yB + hB;
+
+        // if a rectangle is to the left of the other
+        if(rightA > xB || rightB > xA ){
+            return false;
+        }
+        // if a rectangle is above of the other
+        if(bottomA < yB || bottomB < yA ){
+            return false;
+        }
+
+        //if none of the conditions are met return true because they are colliding.
+        return true;
+    }
 
 
-    //getters
+
+    //getter
+    /**
+     * Retrieves the JFrame instance that is used to display content.
+     *
+     * @return the current display JFrame
+     */
     public JFrame getDisplay() {
         return display;
     }
     //setters
+    /**
+     * Sets the JFrame instance that will be used to display content.
+     *
+     * @param display the new JFrame to be used as the display
+     */
     public void setDisplay(JFrame display) {
         this.display = display;
     }
+
+
 }

@@ -20,7 +20,7 @@ public class Transform {
         int width = image.getWidth();
         int height = image.getHeight();
 
-        // Create new buffered image and create graphics in image
+        // Create new buffered image and create graphics to draw the image
         BufferedImage newImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
         Graphics2D gd = newImage.createGraphics();
 
