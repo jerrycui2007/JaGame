@@ -47,6 +47,6 @@ public class Random {
      * @param <T>  type of ArrayList
      */
     public static <T> T choice(ArrayList<T> list) {
-        return list.get(randint(0, list.size()) - 1);
+        return list.get(randint(0, list.size()- 1));
     }
 }
