@@ -71,7 +71,7 @@ public class Transform {
         // g2d is used to draw the image
         // this creates a Graphics2D, which can be used to draw into this BufferedImage https://docs.oracle.com/javase/8/docs/api/java/awt/image/BufferedImage.html
         Graphics2D gd = scaledImage.createGraphics();
-        gd.drawImage(image, width, height, null);
+        gd.drawImage(image, 0, 0, null);
         gd.dispose();
         return scaledImage;
     }
@@ -155,4 +155,3 @@ public class Transform {
         return grayScaleImage;
     }
 }
-

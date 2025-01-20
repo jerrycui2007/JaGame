@@ -1,4 +1,3 @@
-import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
@@ -81,20 +80,6 @@ public class Mixer {
     }
 
     /**
-     * Checks if there's anything in the active sound list playing
-     * @return true if one sound is playing, false if no sounds are playing
-     */
-    public boolean isActive() {
-        boolean active = false;
-        for (Sound sound : activeSounds) {
-            if (sound.isActive()){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
      * Plays background music, looping it infinitely
      * @param backgroundMusic the music to play in the background
      */
@@ -107,9 +92,9 @@ public class Mixer {
      * Used for short sound effects
      */
     public static class Sound {
-        // Volume ranges between 0 and 1, defaults to 1 unless otherwise specified
-        private float volume;
         private Clip clip;
+        // Volume ranges between 0 and 1, defaults to 1 unless otherwise specified
+        private FloatControl volume;
         private AudioInputStream audioStream;
         private boolean isPlaying;
 
@@ -122,7 +107,7 @@ public class Mixer {
             } catch (Exception e) {
                 System.out.println("Failed to open");
             }
-            volume = 1.0f;
+            volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
             isPlaying = false;
         }
 
@@ -135,14 +120,16 @@ public class Mixer {
             } catch (Exception e) {
                 System.out.println("Failed to open");
             }
+            this.volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
             // Handle bad volume inputs
             if (volume < 0) {
-                this.volume = 0;
+                volume = 0;
             } else if (volume > 1) {
-                this.volume = 1;
-            } else {
-                this.volume = volume;
+                volume = 1;
             }
+            // Converting linear to decibels
+            float dB = 20.0f * (float) Math.log10(volume);
+            this.volume.setValue(dB);
             isPlaying = false;
         }
 
@@ -151,7 +138,8 @@ public class Mixer {
          * @return volume
          */
         public float getVolume(){
-            return volume;
+            // Convert decibels to linear scalar
+            return (float)Math.pow(10.0, volume.getValue() / 20.0);
         }
 
         /**
@@ -162,12 +150,13 @@ public class Mixer {
          */
         public void setVolume(float volume){
             if (volume < 0) {
-                this.volume = 0;
+                volume = 0;
             } else if (volume > 1) {
-                this.volume = 1;
-            } else {
-                this.volume = volume;
+                volume = 1;
             }
+            // Converting linear to decibels
+            float dB = 20.0f * (float) Math.log10(volume);
+            this.volume.setValue(dB);
         }
 
         /**
@@ -278,37 +267,21 @@ public class Mixer {
      */
     public static class Music {
         private Clip clip;
-        private float volume;
         private AudioInputStream audioStream;
         private boolean isPlaying;
+        private FloatControl volume;
 
-        public Music (String filepath) {
+        public Music (String filepath){
             // Try to open the sound file
-//            try{
-//                audioStream = AudioSystem.getAudioInputStream(new File(filepath).getAbsoluteFile());
-//                clip = AudioSystem.getClip();
-//                clip.open(audioStream);
-//            } catch (Exception e) {
-//                System.out.println("Failed to open");
-//            }
-            try {
-                File file = new File(filepath);
-                audioStream = AudioSystem.getAudioInputStream(file.getAbsoluteFile());
+            try{
+                audioStream = AudioSystem.getAudioInputStream(new File(filepath).getAbsoluteFile());
                 clip = AudioSystem.getClip();
                 clip.open(audioStream);
-                System.out.println("Full path: " + file.getAbsolutePath());
-                System.out.println("File exists: " + file.exists());
-                System.out.println("File can read: " + file.canRead());
-                if (this.clip == null) {
-                    throw new IOException("Sound read returned null");
-                }
             } catch (Exception e) {
-                System.out.println("Failed to open: " + filepath);
-                System.out.println("Error details: " + e.getMessage());
-                e.printStackTrace();
-                volume = 1.0f;
-                isPlaying = false;
+                System.out.println("Failed to open");
             }
+            volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            isPlaying = false;
         }
         public Music (String filepath, float volume){
             // Try to open the sound file
@@ -319,14 +292,16 @@ public class Mixer {
             } catch (Exception e) {
                 System.out.println("Failed to open");
             }
+            this.volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
             // Handle bad volume inputs
             if (volume < 0) {
-                this.volume = 0;
+                volume = 0;
             } else if (volume > 1) {
-                this.volume = 1;
-            } else {
-                this.volume = volume;
+                volume = 1;
             }
+            // Converting linear to decibels
+            float dB = 20.0f * (float) Math.log10(volume);
+            this.volume.setValue(dB);
             isPlaying = false;
         }
 
@@ -335,7 +310,8 @@ public class Mixer {
          * @return volume
          */
         public float getVolume(){
-            return volume;
+            // Convert decibels to linear scalar
+            return (float)Math.pow(10.0, volume.getValue() / 20.0);
         }
 
         /**
@@ -346,12 +322,13 @@ public class Mixer {
          */
         public void setVolume(float volume){
             if (volume < 0) {
-                this.volume = 0;
+                volume = 0;
             } else if (volume > 1) {
-                this.volume = 1;
-            } else {
-                this.volume = volume;
+                volume = 1;
             }
+            // Converting linear to decibels
+            float dB = 20.0f * (float) Math.log10(volume);
+            this.volume.setValue(dB);
         }
 
         /**
@@ -390,10 +367,8 @@ public class Mixer {
          * Music will loop indefinitely until interrupted
          */
         public void loop(){
-            if (clip != null){
-                clip.loop(Clip.LOOP_CONTINUOUSLY);
-                isPlaying = true;
-            }
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
+            isPlaying = true;
         }
 
         /**
@@ -401,10 +376,8 @@ public class Mixer {
          * @param loops the number of times to loop the music
          */
         public void loop(int loops){
-            if (clip != null){
-                clip.loop(loops);
-                isPlaying = true;
-            }
+            clip.loop(loops);
+            isPlaying = true;
         }
 
         /**
